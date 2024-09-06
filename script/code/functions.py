@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from config import my_colors, hours_name, months_name
+from script.code.config import my_colors, hours_name, months_name
 
 # talvez retornar months e hours pra calcular medidas e realizar hipóteses
 def months_and_hours_review(data: np.ndarray, y: str, title: str, target_label='Date') -> None:
@@ -26,7 +26,7 @@ def months_and_hours_review(data: np.ndarray, y: str, title: str, target_label='
     plt.title(f"Relação entre meses do ano e {title}")
     plt.show()
 
-    # time
+    # barplot of time
     plt.bar(
         x=hours_name,
         height=hours,
@@ -38,8 +38,9 @@ def months_and_hours_review(data: np.ndarray, y: str, title: str, target_label='
     plt.title(f"Relação entre horas do dia e {title}")
     plt.show()
 
+# talvez retornar o information.values() como uma np.ndarray para realizar medidas e hipóteses
 def pie_review(data : np.ndarray, target_label : str, title : str) -> None:
-    information : dict[int] = {}
+    information : dict[str, int] = {}
 
     for info in data:
         target = info[target_label]
@@ -53,6 +54,7 @@ def pie_review(data : np.ndarray, target_label : str, title : str) -> None:
     plt.pie(
         x=information.values(), labels=information.keys(), autopct='%1.1f%%', colors=my_colors
     )
+
     plt.title(f"Quantidade de {title}")
     plt.show()
 

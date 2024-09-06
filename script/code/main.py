@@ -8,6 +8,7 @@ from script.code.functions import months_and_hours_review, pie_review, unique
 # TO-DO
 # fazer testes de hipótese
 # tentar fazer um pie_review que abrange o pie de message, colocando a label 'Others'
+# fazer um jupyter
 
 class Data:
     data_json_path = data_path

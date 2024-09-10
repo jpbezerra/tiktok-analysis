@@ -8,9 +8,6 @@ from script.code.config import *
 from script.code.functions import months_and_hours_review, pie_review, unique, line_review, get_measures, \
     check_relation, hypotesis_analysis
 
-# TO-DO
-# fazer um jupyter
-# checar se database sql, mysql or postgresql
 class Data:
     data_json_path = data_path
 

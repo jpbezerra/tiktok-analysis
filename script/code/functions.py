@@ -102,14 +102,14 @@ def line_review(data : np.ndarray, target_label : str, title : str) -> None:
 def get_measures(data : np.ndarray) -> dict:
     return {'Mean' : st.mean(data), 'Median' : st.median(data), 'SD' : st.stdev(data)}
 
-def check_relation(first_data : np.ndarray, second_data : np.ndarray, first_label : str, second_label : str):
+def check_relation(first_data : np.ndarray, second_data : np.ndarray, first_label : str, second_label : str) -> None:
     plt.scatter(x=first_data, y=second_data)
     plt.xlabel(first_label)
     plt.ylabel(second_label)
     plt.grid()
     plt.show()
 
-def hypotesis_analysis(statistics : float, p_value : float, coefficient : str):
+def hypotesis_analysis(statistics : float, p_value : float, coefficient : str) -> None:
     print(f"{coefficient} : {statistics:.4f}\nP-value : {p_value:.4f}")
 
     if p_value < significance:

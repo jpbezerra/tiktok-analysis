@@ -7,12 +7,14 @@ my_colors = [
 ]
 
 months_name = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ]
 
-hours_name = [f"{x}:00" for x in range(24)]
+hours_name = [f"{x}h" for x in range(24)]
 
 days_name = [f"{day}" for day in range(1, 32)]
 
 significance = 0.05
+
+font_size = 7

@@ -2,9 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import statistics as st
 
-from script.code.config import my_colors, hours_name, months_name, days_name, significance
+from script.code.config import my_colors, hours_name, months_name, days_name, significance, font_size
 
-def months_and_hours_review(data: np.ndarray, y: str, title: str, target_label='Date') -> list[np.ndarray]:
+
+def months_and_hours_review(data: np.ndarray, y: str, title: str, target_label='Date', return_data=True) -> list[np.ndarray] | None:
     months = np.zeros(12, dtype=int)
     hours = np.zeros(24, dtype=int)
 
@@ -23,7 +24,8 @@ def months_and_hours_review(data: np.ndarray, y: str, title: str, target_label='
 
     plt.xlabel("Months")
     plt.ylabel(f"Amount of {y}")
-    plt.title(f"Relação entre meses do ano e {title}")
+    plt.title(f"Relation between months and {title}")
+    plt.xticks(fontsize=font_size)
     plt.grid()
     plt.show()
 
@@ -36,11 +38,13 @@ def months_and_hours_review(data: np.ndarray, y: str, title: str, target_label='
 
     plt.xlabel("Hours")
     plt.ylabel(f"Amount of {y}")
-    plt.title(f"Relação entre horas do dia e {title}")
+    plt.title(f"Relation between hours and {title}")
+    plt.xticks(fontsize=font_size)
     plt.grid()
     plt.show()
 
-    return [months, hours]
+    if return_data:
+        return [months, hours]
 
 def pie_review(data : np.ndarray, target_label : str, title : str) -> None:
     information : dict[str, int] = {}
@@ -72,7 +76,7 @@ def pie_review(data : np.ndarray, target_label : str, title : str) -> None:
         pctdistance=0.80
     )
 
-    plt.title(f"Quantidade de {title}")
+    plt.title(f"Percentage of {title}")
     plt.show()
 
 def unique(data : np.ndarray, target_label : str) -> np.ndarray:
@@ -90,12 +94,13 @@ def line_review(data : np.ndarray, target_label : str, title : str) -> None:
         days[int(info[target_label].split(' ')[0].split('-')[2]) - 1] += 1
 
     plt.plot(days_name, days, marker='o')
-    plt.title(f"Relação entre dias e {title}")
+    plt.title(f"Relation between days and {title}")
+    plt.xticks(fontsize=font_size)
     plt.grid()
     plt.xlabel("Days")
 
 def get_measures(data : np.ndarray) -> dict:
-    return {'Mean' : st.mean(data), 'Median' : st.median(data), 'Mode' : st.multimode(data)}
+    return {'Mean' : st.mean(data), 'Median' : st.median(data), 'SD' : st.stdev(data)}
 
 def check_relation(first_data : np.ndarray, second_data : np.ndarray, first_label : str, second_label : str):
     plt.scatter(x=first_data, y=second_data)
@@ -104,11 +109,11 @@ def check_relation(first_data : np.ndarray, second_data : np.ndarray, first_labe
     plt.grid()
     plt.show()
 
-def hypotesis_analysis(statistics : float, p_value : float):
-    print(f"Test statistics : {statistics:.4f}\nP-value : {p_value:.4f}")
+def hypotesis_analysis(statistics : float, p_value : float, coefficient : str):
+    print(f"{coefficient} : {statistics:.4f}\nP-value : {p_value:.4f}")
 
     if p_value < significance:
-        print("Rejeitamos a hipótese nula, existem dados suficientes para apontar tal correlação\n")
+        print("The null hypotesis is rejected\n")
 
     else:
-        print("Não rejeitamos a hipótese nula, não existem dados suficientes para apontar tal correlação\n")
+        print("The null hypotesis is not rejected\n")

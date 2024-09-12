@@ -27,6 +27,8 @@
 - **user_data_tiktok.json**: data of the project.
 - **requirements.txt**: list of libraries used on the code.
 
+---
+
 # How to run
 - To run the code, open your programming software to code python and use the command:
 ````plaintext

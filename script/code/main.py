@@ -1,12 +1,13 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from scipy import stats
 from statsmodels.stats.proportion import proportions_ztest
 
 from script.code.config import *
 from script.code.functions import months_and_hours_review, pie_review, unique, line_review, get_measures, \
-    check_relation, hypotesis_analysis
+    check_relation, hypotesis_analysis, hypotesis_graphic
 
 
 class Data:
@@ -178,12 +179,27 @@ def hypoteses(data : Data) -> None:
     # - HA: the times and months for receiving/sending messages are the same
     # - 5% significance level
 
-    s_hip1_h, p_hip1_h = stats.pearsonr(data.guard['Messages']['H'][0], data.guard['Messages']['H'][1])
-    hypotesis_analysis(s_hip1_h, p_hip1_h, "Pearson correlation coefficient")
-    # pode falar que ta proxima de 1, e positiva
+    # Hours
+    sent_h, receive_h = data.guard['Messages']['H'][0], data.guard['Messages']['H'][1]
 
-    s_hip1_m, p_hip1_m = stats.pearsonr(data.guard['Messages']['M'][0], data.guard['Messages']['M'][1])
+    s_hip1_h, p_hip1_h = stats.pearsonr(sent_h, receive_h)
+    hypotesis_analysis(s_hip1_h, p_hip1_h, "Pearson correlation coefficient")
+
+    data_1_h = pd.DataFrame({'Messages sent': sent_h, 'Messages received': receive_h})
+
+    hypotesis_graphic(
+        data_1_h, "Messages sent", "Messages received"
+    )
+
+    # Months
+    sent_m, receive_m = data.guard['Messages']['M'][0], data.guard['Messages']['M'][1]
+
+    s_hip1_m, p_hip1_m = stats.pearsonr(sent_m, receive_m)
     hypotesis_analysis(s_hip1_m, p_hip1_m, "Pearson correlation coefficient")
+
+    data_1_m = pd.DataFrame({'Messages sent': sent_m, 'Messages received': receive_m})
+
+    hypotesis_graphic(data_1_m, "Messages sent", "Messages received")
 
     # HYPOTESIS 2
     # - The times and months when I share the most tend to be the same times when I research the most
@@ -192,11 +208,25 @@ def hypoteses(data : Data) -> None:
     # - HA: sharing/search times and months are the same
     # - 5% significance level
 
-    s_hip2_h, p_hip2_h = stats.pearsonr(data.guard['Share']['H'], data.guard['Search']['H'])
+    # Hours
+    share_h, search_h = data.guard['Share']['H'], data.guard['Search']['H']
+
+    s_hip2_h, p_hip2_h = stats.pearsonr(share_h, search_h)
     hypotesis_analysis(s_hip2_h, p_hip2_h, "Pearson correlation coefficient")
 
-    s_hip2_m, p_hip2_m = stats.pearsonr(data.guard['Share']['M'], data.guard['Search']['M'])
+    data_2_h = pd.DataFrame({'Shares': share_h, 'Searchs': search_h})
+
+    hypotesis_graphic(data_2_h, "Shares", "Searchs")
+
+    # Months
+    share_m, search_m = data.guard['Share']['M'][2:8], data.guard['Search']['M'][2:8]
+
+    s_hip2_m, p_hip2_m = stats.pearsonr(share_m, search_m)
     hypotesis_analysis(s_hip2_m, p_hip2_m, "Pearson correlation coefficient")
+
+    data_2_m = pd.DataFrame({'Shares': share_m, 'Searchs': search_m})
+
+    hypotesis_graphic(data_2_m, "Shares", "Searchs")
 
     # HYPOTESIS 3
     # - The proportion of liked videos is similar to the proportion of non-liked videos
@@ -206,15 +236,22 @@ def hypoteses(data : Data) -> None:
     # - 5% significance level
 
     liked_videos = len(np.array(data.activity['Like List']['ItemFavoriteList']))
-    watched_videos = len(np.array(data.activity['Video Browsing History']['VideoList'])) - liked_videos - data.guard['Watched']['M'][1]
+    non_liked_videos = len(np.array(data.activity['Video Browsing History']['VideoList'])) - data.guard['Watched']['M'][1]
+    total_videos = liked_videos + non_liked_videos
 
     s_hip3, p_hip3 = proportions_ztest(
-        np.array([liked_videos, watched_videos]),
-        np.array([liked_videos + watched_videos, liked_videos + watched_videos]),
+        np.array([liked_videos, non_liked_videos]),
+        np.array([total_videos, total_videos]),
         alternative='two-sided'
     )
 
     hypotesis_analysis(s_hip3, p_hip3, "Z-Statistic")
+
+    data = pd.DataFrame({'Proportions': [liked_videos / total_videos, non_liked_videos / total_videos],
+                         'Labels': ['Liked Videos', 'Non-Liked Video']})
+
+    sns.barplot(data=data, x='Labels', y='Proportions', hue='Labels')
+    plt.show()
 
 
 def main() -> None:

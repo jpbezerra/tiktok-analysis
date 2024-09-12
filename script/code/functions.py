@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import statistics as st
+import pandas as pd
+import seaborn as sns
 
 from script.code.config import my_colors, hours_name, months_name, days_name, significance, font_size
 
@@ -46,6 +48,7 @@ def months_and_hours_review(data: np.ndarray, y: str, title: str, target_label='
     if return_data:
         return [months, hours]
 
+
 def pie_review(data : np.ndarray, target_label : str, title : str) -> None:
     information : dict[str, int] = {}
 
@@ -79,6 +82,7 @@ def pie_review(data : np.ndarray, target_label : str, title : str) -> None:
     plt.title(f"Percentage of {title}")
     plt.show()
 
+
 def unique(data : np.ndarray, target_label : str) -> np.ndarray:
     result : np.ndarray = np.array([])
 
@@ -86,6 +90,7 @@ def unique(data : np.ndarray, target_label : str) -> np.ndarray:
         result = np.append(result, info[target_label])
 
     return np.unique(result)
+
 
 def line_review(data : np.ndarray, target_label : str, title : str) -> None:
     days : np.ndarray = np.zeros(31, dtype=int)
@@ -99,17 +104,20 @@ def line_review(data : np.ndarray, target_label : str, title : str) -> None:
     plt.grid()
     plt.xlabel("Days")
 
+
 def get_measures(data : np.ndarray) -> dict:
     return {'Mean' : st.mean(data), 'Median' : st.median(data), 'SD' : st.stdev(data)}
 
-def check_relation(first_data : np.ndarray, second_data : np.ndarray, first_label : str, second_label : str) -> None:
+
+def check_relation(first_data : np.ndarray, second_data : np.ndarray, first_label : str, second_label : str):
     plt.scatter(x=first_data, y=second_data)
     plt.xlabel(first_label)
     plt.ylabel(second_label)
     plt.grid()
     plt.show()
 
-def hypotesis_analysis(statistics : float, p_value : float, coefficient : str) -> None:
+
+def hypotesis_analysis(statistics : float, p_value : float, coefficient : str):
     print(f"{coefficient} : {statistics:.4f}\nP-value : {p_value:.4f}")
 
     if p_value < significance:
@@ -117,3 +125,16 @@ def hypotesis_analysis(statistics : float, p_value : float, coefficient : str) -
 
     else:
         print("The null hypotesis is not rejected\n")
+
+
+def hypotesis_graphic(data : pd.DataFrame, first_label : str, second_label : str) -> None:
+    sns.jointplot(
+        data=data,
+        x=first_label,
+        y=second_label,
+        kind="kde",
+        xlim=(data[first_label].min(), data[first_label].max()),
+        ylim=(data[second_label].min(), data[second_label].max())
+    )
+
+    plt.show()
